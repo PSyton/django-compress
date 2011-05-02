@@ -79,7 +79,7 @@ class Compressor(object):
     def read_file(self, path):
         """Read file content in binary mode"""
         file = storage.open(path, mode='rb')
-        content = file.read()
+        content = file.read().decode('utf8')
         file.close()
         return content
 

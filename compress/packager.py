@@ -43,7 +43,7 @@ class Packager(object):
         return self.compiler.compile(paths)
 
     def pack(self, package, compress, signal):
-        if not package['output']
+        if not package['output']:
             return ''
         if settings.COMPRESS_AUTO or self.force:
             need_update, version = self.versioning.need_update(
@@ -69,7 +69,7 @@ class Packager(object):
 
     def save_file(self, filename, content):
         file = storage.open(filename, mode='wb+')
-        file.write(content)
+        file.write( content.encode('UTF-8') )
         file.close()
 
     def create_packages(self, config):
@@ -79,7 +79,7 @@ class Packager(object):
         for name in config:
             packages[name] = {}
             paths = []
-            if 'source_filenames' in in config[name]:
+            if 'source_filenames' in config[name]:
                 for path in config[name]['source_filenames']:
                     full_path = os.path.join(settings.COMPRESS_ROOT, path)
                     paths.extend([os.path.normpath(path)
@@ -94,8 +94,8 @@ class Packager(object):
                 packages[name]['context'] = config[name]['extra_context']
             if 'template_name' in config[name]:
                 packages[name]['template'] = config[name]['template_name']
-            if 'externals_urls' in config[name]:
-                packages[name]['externals'] = config[name]['externals_urls']
+            if 'external_urls' in config[name]:
+                packages[name]['externals'] = config[name]['external_urls']
         return packages
 
 
