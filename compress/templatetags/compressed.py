@@ -70,9 +70,10 @@ class CompressedJSNode(template.Node):
             package['template'] = "compress/js.html"
         if not 'context' in package:
             context = package['context']
-        context.update({
-            'url': self.packager.individual_url(path)
-        })
+        if path:
+            context.update({
+                'url': self.packager.individual_url(path)
+            })
         return render_to_string(package['template'], context)
 
     def render_external(self, package, url):

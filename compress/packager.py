@@ -43,6 +43,8 @@ class Packager(object):
         return self.compiler.compile(paths)
 
     def pack(self, package, compress, signal):
+        if not package['output']
+            return ''
         if settings.COMPRESS_AUTO or self.force:
             need_update, version = self.versioning.need_update(
                 package['output'], package['paths'])
@@ -77,12 +79,16 @@ class Packager(object):
         for name in config:
             packages[name] = {}
             paths = []
-            for path in config[name]['source_filenames']:
-                full_path = os.path.join(settings.COMPRESS_ROOT, path)
-                paths.extend([os.path.normpath(path)
-                    for path in glob.glob(full_path)])
+            if 'source_filenames' in in config[name]:
+                for path in config[name]['source_filenames']:
+                    full_path = os.path.join(settings.COMPRESS_ROOT, path)
+                    paths.extend([os.path.normpath(path)
+                        for path in glob.glob(full_path)])
             packages[name]['paths'] = paths
-            packages[name]['output'] = config[name]['output_filename']
+            if 'output_filename' in config[name]:
+                packages[name]['output'] = config[name]['output_filename']
+            else:
+                packages[name]['output'] = ''
             packages[name]['context'] = {}
             if 'extra_context' in config[name]:
                 packages[name]['context'] = config[name]['extra_context']
