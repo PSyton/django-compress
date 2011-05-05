@@ -3,7 +3,6 @@ import os
 from django.test import TestCase
 
 from compress.conf import settings
-from compress.compressors import Compressor
 from compress.packager import Packager
 
 class PackagerTest(TestCase):

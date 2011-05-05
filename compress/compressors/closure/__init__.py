@@ -3,7 +3,7 @@ from compress.compressors import SubProcessCompressor
 
 
 class ClosureCompressor(SubProcessCompressor):
-    def compress_js(self, js):
+    def compress(self, js):
         command = '%s %s' % (settings.COMPRESS_CLOSURE_BINARY, settings.COMPRESS_CLOSURE_ARGUMENTS)
         if self.verbose:
             command += ' --verbose'

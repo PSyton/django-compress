@@ -24,6 +24,7 @@ COMPRESS_CSS_COMPRESSORS = getattr(settings, 'COMPRESS_CSS_COMPRESSORS', [
 COMPRESS_JS_COMPRESSORS = getattr(settings, 'COMPRESS_JS_COMPRESSORS', [
     'compress.compressors.yui.YUICompressor'
 ])
+
 COMPRESS_COMPILERS = getattr(settings, 'COMPRESS_COMPILERS', [])
 
 COMPRESS_CSS = getattr(settings, 'COMPRESS_CSS', {})

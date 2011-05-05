@@ -4,19 +4,21 @@ import urlparse
 
 from compress.conf import settings
 from compress.compilers import Compiler
-from compress.compressors import Compressor
+from compress.compressors import JSCompressor, CSSCompressor
 from compress.signals import css_compressed, js_compressed
 from compress.storage import storage
 from compress.versioning import Versioning
+from compress.utils import make_relative_path
 
 
 class Packager(object):
     def __init__(self, force=False, verbose=False):
         self.force = force
         self.verbose = verbose
-        self.compressor = Compressor(verbose)
-        self.versioning = Versioning(verbose)
-        self.compiler = Compiler(verbose)
+        self.css_compressor = CSSCompressor( verbose )
+        self.js_compressor = JSCompressor( verbose )
+        self.versioning = Versioning( verbose )
+        self.compiler = Compiler( verbose )
         self.packages = {
             'css': self.create_packages(settings.COMPRESS_CSS),
             'js': self.create_packages(settings.COMPRESS_JS),
@@ -34,10 +36,10 @@ class Packager(object):
 
     def individual_url(self, filename):
         return urlparse.urljoin(settings.COMPRESS_URL,
-            self.compressor.relative_path(filename)[1:])
+            make_relative_path(filename)[1:])
 
     def pack_stylesheets(self, package):
-        return self.pack(package, self.compressor.compress_css, css_compressed)
+        return self.pack(package, self.css_compressor, css_compressed)
 
     def compile(self, paths):
         return self.compiler.compile(paths)
@@ -54,7 +56,7 @@ class Packager(object):
                 self.versioning.cleanup(package['output'])
                 if self.verbose or self.force:
                     print "Version: %s" % version
-                    print "Saving: %s" % self.compressor.relative_path(output_filename)
+                    print "Saving: %s" % make_relative_path(output_filename)
                 paths = self.compile(package['paths'])
                 content = compress(paths)
                 self.save_file(output_filename, content)
@@ -65,11 +67,11 @@ class Packager(object):
         return self.versioning.output_filename(package['output'], version)
 
     def pack_javascripts(self, package):
-        return self.pack(package, self.compressor.compress_js, js_compressed)
+        return self.pack(package, self.js_compressor, js_compressed)
 
     def save_file(self, filename, content):
         file = storage.open(filename, mode='wb+')
-        file.write( content.encode('UTF-8') )
+        file.write( content.encode('utf8') )
         file.close()
 
     def create_packages(self, config):

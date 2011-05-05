@@ -3,13 +3,13 @@ import warnings
 import tempfile
 
 from compress.conf import settings
-from compress.compressors import CompressorBase
+from compress.compressors import BaseCompressor
 
 warnings.simplefilter('ignore', RuntimeWarning)
 
 
-class CSSTidyCompressor(CompressorBase):
-    def compress_css(self, css):
+class CSSTidyCompressor(BaseCompressor):
+    def compress(self, css):
         tmp_file = tempfile.NamedTemporaryFile(mode='w+b')
         tmp_file.write(css)
         tmp_file.flush()

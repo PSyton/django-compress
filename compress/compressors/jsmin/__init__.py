@@ -1,7 +1,7 @@
-from compress.compressors import CompressorBase
+from compress.compressors import BaseCompressor
 from compress.compressors.jsmin.jsmin import jsmin
 
 
-class JSMinCompressor(CompressorBase):
-    def compress_js(self, js):
+class JSMinCompressor(BaseCompressor):
+    def compress(self, js):
         return jsmin(js)
