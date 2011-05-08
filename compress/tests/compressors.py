@@ -8,7 +8,7 @@ class CompressorTest(TestCase):
         self.old_compress_url = settings.COMPRESS_URL
         settings.COMPRESS_URL = 'http://localhost/static/'
         self.old_root = settings.COMPRESS_ROOT
-        settings.COMPRESS_ROOT = os.path.join(os.path.dirname(__file__), "testdata")
+        settings.COMPRESS_ROOT = os.path.join(os.path.dirname(__file__), "testdata/")
 
     def test_css_concatenate(self):
         compressor = CSSCompressor()

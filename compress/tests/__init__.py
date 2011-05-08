@@ -2,6 +2,7 @@ import compress
 from compress.tests.compilers import *
 from compress.tests.compressors import *
 from compress.tests.package import *
+from compress.tests.config import *
 
 class CompressVersionInfoTests(TestCase):
     """
@@ -38,3 +39,4 @@ class CompressVersionInfoTests(TestCase):
         for version_dict in versions:
             compress.VERSION = version_dict['version']
             self.assertEqual(compress.get_version(), version_dict['expected'])
+

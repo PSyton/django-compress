@@ -60,3 +60,9 @@ if COMPRESS_JS_COMPRESSORS is None:
 
 if COMPRESS_COMPILERS is None:
     COMPRESS_COMPILERS = []
+
+if COMPRESS_ROOT[-1] != '/':
+  COMPRESS_ROOT += '/'
+
+if COMPRESS_URL[-1] != '/':
+  COMPRESS_URL += '/'

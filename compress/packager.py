@@ -84,13 +84,14 @@ class Packager(object):
             if 'source_filenames' in config[name]:
                 for path in config[name]['source_filenames']:
                     full_path = os.path.join(settings.COMPRESS_ROOT, path)
-                    paths.extend([os.path.normpath(path)
+                    paths.extend([os.path.normpath(path).replace(settings.COMPRESS_ROOT, '')
                         for path in glob.glob(full_path)])
-            packages[name]['paths'] = paths
+            if len(paths) > 0:
+              packages[name]['paths'] = paths
             if 'output_filename' in config[name]:
                 packages[name]['output'] = config[name]['output_filename']
-            else:
-                packages[name]['output'] = ''
+#            else:
+#                packages[name]['output'] = ''
             packages[name]['context'] = {}
             if 'extra_context' in config[name]:
                 packages[name]['context'] = config[name]['extra_context']
