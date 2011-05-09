@@ -1,8 +1,8 @@
 from setuptools import setup, find_packages
-
+from compress import get_version
 setup(
     name='django-compress',
-    version='1.2.0',
+    version=get_version(),
     description='django-compress provides an automated system for compressing CSS and JavaScript files',
     author='Andreas Pelme',
     author_email='Andreas Pelme <andreas@pelme.se>',
