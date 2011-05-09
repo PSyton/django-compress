@@ -12,27 +12,27 @@ class CompressorTest(TestCase):
 
     def test_css_concatenate(self):
         compressor = CSSCompressor()
-        css_list = [ 'absolute.css'
-               , 'relative.css'
-               , 'no_protocol.css'
-               , 'utf8.css' ]
+        css_list = [ 'css/absolute.css'
+               , 'css/relative.css'
+               , 'css/no_protocol.css'
+               , 'css/utf8.css' ]
         output = compressor.compress( css_list )
-        f = open( os.path.join( settings.COMPRESS_ROOT, 'results1.css' ), 'rb' )
-        self.assertEqual( f.read().decode('utf8'), output, "CSS concatenate failed")
+        f = open( os.path.join( settings.COMPRESS_ROOT, 'css/results1.css' ), 'rb' )
+        self.assertEqual( f.read().decode('utf8'), output)
         f.close()
 
     def test_js_concatenate(self):
         compressor = JSCompressor()
-        js_list = [ 'application1.js'
-                  , 'application2.js' ]
+        js_list = [ 'js/application1.js'
+                  , 'js/application2.js' ]
         output = compressor.compress( js_list )
-        f = open( os.path.join( settings.COMPRESS_ROOT, 'results1.js' ), 'rb' )
+        f = open( os.path.join( settings.COMPRESS_ROOT, 'js/results1.js' ), 'rb' )
         self.assertEqual( f.read().decode('utf8'), output, "JS concatenate failed")
         f.close()
 
     def test_subprocess_compressor(self):
         compresstor = SubProcessCompressor( False )
-        f = open( os.path.join( settings.COMPRESS_ROOT, 'results1.js' ), 'rb' )
+        f = open( os.path.join( settings.COMPRESS_ROOT, 'js/results1.js' ), 'rb' )
         data = f.read()
         f.close()
         out = compresstor.execute_command( "cat", data )
