@@ -1,17 +1,12 @@
-import os
-import warnings
 import tempfile
 
 from compress.conf import settings
-from compress.compressors import BaseCompressor
+from compress.compressors import SubProcessCompressor
 
-warnings.simplefilter('ignore', RuntimeWarning)
-
-
-class CSSTidyCompressor(BaseCompressor):
+class CSSTidyCompressor(SubProcessCompressor):
     def compress(self, css):
         tmp_file = tempfile.NamedTemporaryFile(mode='w+b')
-        tmp_file.write(css)
+        tmp_file.write( css.encode( 'utf8' ) )
         tmp_file.flush()
 
         output_file = tempfile.NamedTemporaryFile(mode='w+b')
@@ -21,8 +16,9 @@ class CSSTidyCompressor(BaseCompressor):
             settings.COMPRESS_CSSTIDY_ARGUMENTS, output_file.name
         )
 
-        command_output = os.popen(command).read()
+        command_output = self.execute_command( command, None )
 
+        output_file.seek( 0 )
         filtered_css = output_file.read()
         output_file.close()
         tmp_file.close()

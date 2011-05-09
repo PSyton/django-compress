@@ -102,7 +102,8 @@ class SubProcessCompressor(BaseCompressor):
     def execute_command(self, command, content):
         pipe = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE,
             stdin=subprocess.PIPE, stderr=subprocess.PIPE)
-        pipe.stdin.write(content)
+        if content:
+            pipe.stdin.write(content)
         pipe.stdin.close()
 
         compressed_content = pipe.stdout.read()
@@ -120,3 +121,4 @@ class SubProcessCompressor(BaseCompressor):
             print error
 
         return compressed_content
+
