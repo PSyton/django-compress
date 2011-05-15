@@ -1,4 +1,5 @@
 recursive-include compress/templates *.html
 include docs/*
+recursive-include compress/tests/testdata *
 include AUTHORS
 include LICENSE

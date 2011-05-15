@@ -12,5 +12,5 @@ def make_relative_path(absolute_path):
     compress_root = os.path.normpath(settings.COMPRESS_ROOT)
     return os.path.join('../', absolute_path.replace(compress_root, ''))
 
-def root_path(self, filename):
+def root_path(filename):
     return os.path.join(settings.COMPRESS_ROOT, filename)

@@ -44,7 +44,7 @@ class Packager(object):
     def compile(self, paths):
         return self.compiler.compile(paths)
 
-    def pack(self, package, compress, signal):
+    def pack(self, package, compressor, signal):
         if not package['output']:
             return ''
         if settings.COMPRESS_AUTO or self.force:
@@ -58,9 +58,9 @@ class Packager(object):
                     print "Version: %s" % version
                     print "Saving: %s" % make_relative_path(output_filename)
                 paths = self.compile(package['paths'])
-                content = compress(paths)
-                self.save_file(output_filename, content)
-                signal.send(sender=self, package=package, version=version)
+                content = compressor.compress( paths )
+                self.save_file( output_filename, content )
+                signal.send( sender=self, package=package, version=version )
         else:
             filename_base, filename = os.path.split(package['output'])
             version = self.versioning.version_from_file(filename_base, filename)
@@ -84,14 +84,14 @@ class Packager(object):
             if 'source_filenames' in config[name]:
                 for path in config[name]['source_filenames']:
                     full_path = os.path.join(settings.COMPRESS_ROOT, path)
-                    paths.extend([os.path.normpath(path).replace(settings.COMPRESS_ROOT, '')
-                        for path in glob.glob(full_path)])
+                    for path in glob.glob(full_path):
+                      path = os.path.normpath(path).replace(settings.COMPRESS_ROOT, '')
+                      if not path in paths:
+                        paths.append(path)
             if len(paths) > 0:
               packages[name]['paths'] = paths
             if 'output_filename' in config[name]:
                 packages[name]['output'] = config[name]['output_filename']
-#            else:
-#                packages[name]['output'] = ''
             packages[name]['context'] = {}
             if 'extra_context' in config[name]:
                 packages[name]['context'] = config[name]['extra_context']
