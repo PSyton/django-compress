@@ -1,8 +1,9 @@
 import compress
 from compress.tests.compilers import *
 from compress.tests.compressors import *
-from compress.tests.package import *
 from compress.tests.config import *
+from compress.tests.package import *
+from compress.tests.templatetags import *
 
 class CompressVersionInfoTests(TestCase):
     """

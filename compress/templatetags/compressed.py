@@ -6,87 +6,57 @@ from compress.packager import Packager, PackageNotFound
 
 register = template.Library()
 
+class CompressedNode(template.Node):
+  def __init__(self, name, aType):
+    self.name = name
+    self.type = aType
+    if aType == 'css':
+      self.template = "compress/css.html"
+    else:
+      self.template = "compress/js.html"
+    self.packager = Packager()
 
-class CompressedCSSNode(template.Node):
-    def __init__(self, name):
-        self.name = name
-        self.packager = Packager()
+  def create_tags(self, package, path):
+     context = {}
+     if 'context' in package:
+       context = package['context']
+     context.update({
+       'url': self.packager.individual_url( path )
+     })
+     return render_to_string(package['template'], context)
 
-    def render(self, context):
-        package_name = template.Variable(self.name).resolve(context)
-        try:
-            package = self.packager.package_for('css', package_name)
-        except PackageNotFound:
-            return ''  # fail silently, do not return anything if an invalid group is specified
+  def render(self, context):
+    package_name = template.Variable(self.name).resolve(context)
+    try:
+      package = self.packager.package_for(self.type ,package_name)
+      package['type'] = self.type
 
-        if settings.COMPRESS:
-            compressed_path = self.packager.pack_stylesheets(package)
-            return self.render_css(package, compressed_path)
-        else:
-            package['paths'] = self.packager.compile(package['paths'])
-            return self.render_individual(package)
+    except PackageNotFound:
+      return ''  # fail silently, do not return anything if an invalid group is specified
 
-    def render_css(self, package, path):
-        context = {}
-        if not 'template' in package:
-            package['template'] = "compress/css.html"
-        if not 'context' in package:
-            context = package['context']
-        context.update({
-            'url': self.packager.individual_url(path)
-        })
-        return render_to_string(package['template'], context)
+    if not 'template' in package:
+      package['template'] = self.template
 
-    def render_individual(self, package):
-        tags = [self.render_css(package, path) for path in package['paths']]
-        return '\n'.join(tags)
+    if 'externals' in package:
+      out = '\n'.join([self.render_external(package, url) for url in package['externals']])
+    else:
+      out = ''
 
+    if settings.COMPRESS:
+      compressed_path = self.packager.pack( package )
+      out += self.create_tags(package, compressed_path)
+    else:
+      package['paths'] = self.packager.compile(package['paths'])
+      out += self.render_individual(package)
 
-class CompressedJSNode(template.Node):
-    def __init__(self, name):
-        self.name = name
-        self.packager = Packager()
+    return out
 
-    def render(self, context):
-        package_name = template.Variable(self.name).resolve(context)
-        try:
-            package = self.packager.package_for('js', package_name)
-        except PackageNotFound:
-            return ''  # fail silently, do not return anything if an invalid group is specified
+  def render_external(self, package, url):
+    return render_to_string(package['template'], { 'url': url })
 
-        if 'externals' in package:
-            return '\n'.join([self.render_external(package, url) for url in package['externals']])
-
-        if settings.COMPRESS:
-            compressed_path = self.packager.pack_javascripts(package)
-            return self.render_js(package, compressed_path)
-        else:
-            package['paths'] = self.packager.compile(package['paths'])
-            return self.render_individual(package)
-
-    def render_js(self, package, path):
-        context = {}
-        if not 'template' in package:
-            package['template'] = "compress/js.html"
-        if not 'context' in package:
-            context = package['context']
-        if path:
-            context.update({
-                'url': self.packager.individual_url(path)
-            })
-        return render_to_string(package['template'], context)
-
-    def render_external(self, package, url):
-        if not 'template' in package:
-            package['template'] = "compress/js.html"
-        return render_to_string(package['template'], {
-            'url': url
-        })
-
-    def render_individual(self, package):
-        tags = [self.render_js(package, js) for js in package['paths']]
-        return '\n'.join(tags)
-
+  def render_individual(self, package):
+    tags = [self.create_tags(package, path) for path in package['paths']]
+    return '\n'.join(tags)
 
 def compressed_css(parser, token):
     try:
@@ -94,7 +64,7 @@ def compressed_css(parser, token):
     except ValueError:
         raise template.TemplateSyntaxError, '%r requires exactly one argument: the name of a group in the COMPRESS_CSS setting' % token.split_contents()[0]
 
-    return CompressedCSSNode(name)
+    return CompressedNode( name, 'css' )
 compressed_css = register.tag(compressed_css)
 
 
@@ -103,5 +73,5 @@ def compressed_js(parser, token):
         tag_name, name = token.split_contents()
     except ValueError:
         raise template.TemplateSyntaxError, '%r requires exactly one argument: the name of a group in the COMPRESS_JS setting' % token.split_contents()[0]
-    return CompressedJSNode(name)
+    return CompressedNode( name, 'js' )
 compressed_js = register.tag(compressed_js)

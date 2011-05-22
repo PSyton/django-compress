@@ -14,3 +14,8 @@ def make_relative_path(absolute_path):
 
 def root_path(filename):
     return os.path.join(settings.COMPRESS_ROOT, filename)
+
+def makeDirs(filename):
+  dir = os.path.dirname(filename)
+  if not os.path.exists(dir):
+    os.makedirs(dir)
