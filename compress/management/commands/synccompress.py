@@ -17,7 +17,6 @@ class Command(NoArgsCommand):
     def handle_noargs(self, **options):
         from compress.packager import Packager
         packager = Packager(
-            aType = 'css'
             force=options.get('force', False),
             verbose=int(options.get('verbosity', 1)) >= 2
         )
@@ -32,7 +31,6 @@ class Command(NoArgsCommand):
             packager.pack(package)
 
         packager = Packager(
-            aType = 'js'
             force=options.get('force', False),
             verbose=int(options.get('verbosity', 1)) >= 2
         )
