@@ -92,6 +92,8 @@ class Packager(object):
             packages[name]['paths'] = paths
             if 'output_filename' in config[name]:
                 packages[name]['output'] = config[name]['output_filename']
+            else:
+                packages[name]['output'] = ''
             packages[name]['context'] = {}
             if 'extra_context' in config[name]:
                 packages[name]['context'] = config[name]['extra_context']
