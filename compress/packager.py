@@ -89,8 +89,7 @@ class Packager(object):
                       path = os.path.normpath(path).replace(settings.COMPRESS_ROOT, '')
                       if not path in paths:
                         paths.append(path)
-            if len(paths) > 0:
-              packages[name]['paths'] = paths
+            packages[name]['paths'] = paths
             if 'output_filename' in config[name]:
                 packages[name]['output'] = config[name]['output_filename']
             packages[name]['context'] = {}
