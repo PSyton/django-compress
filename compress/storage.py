@@ -9,11 +9,8 @@ from compress.conf import settings
 
 
 class CompressStorage(FileSystemStorage):
-    def __init__(self, location=None, base_url=None, *args, **kwargs):
-        if location is None:
-            location = settings.COMPRESS_ROOT
-        if base_url is None:
-            base_url = settings.COMPRESS_URL
+    def __init__(self, location=settings.COMPRESS_ROOT, base_url=settings.COMPRESS_URL,
+ 				 *args, **kwargs):
         super(CompressStorage, self).__init__(location, base_url, *args, **kwargs)
 
     def accessed_time(self, name):
