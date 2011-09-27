@@ -11,6 +11,12 @@ Configuration and list of available settings for django-compress
   
   Don't forget to read :doc:`backwardsincompatiblechanges`
 
+Install App
+================
+In ``settings.py`` you must add the following line to ``INSTALLED_APS`` ::
+
+  'compress',
+
 Specifying files
 ================
 
