@@ -1,9 +1,10 @@
 from django.conf import settings
 
 COMPRESS = getattr(settings, 'COMPRESS', not settings.DEBUG)
-COMPRESS_SOURCE = getattr(settings, 'COMPRESS_SOURCE', settings.STATIC_ROOT)
 COMPRESS_ROOT = getattr(settings, 'COMPRESS_ROOT', settings.STATIC_ROOT)
+if COMPRESS_ROOT[-1] != '/': COMPRESS_ROOT += '/'
 COMPRESS_URL = getattr(settings, 'COMPRESS_URL', settings.STATIC_URL)
+if COMPRESS_URL[-1] != '/': COMPRESS_URL += '/'
 COMPRESS_AUTO = getattr(settings, 'COMPRESS_AUTO', True)
 COMPRESS_VERSION = getattr(settings, 'COMPRESS_VERSION', False)
 COMPRESS_VERSION_PLACEHOLDER = getattr(settings, 'COMPRESS_VERSION_PLACEHOLDER', '?')
@@ -15,10 +16,10 @@ COMPRESS_STORAGE = getattr(settings, 'COMPRESS_STORAGE',
     'compress.storage.CompressStorage')
 
 COMPRESS_CSS_COMPRESSORS = getattr(settings, 'COMPRESS_CSS_COMPRESSORS', [
-    'compress.compressors.yui.YUICompressor'
+    'compress.compressors.yui.CSSYUICompressor'
 ])
 COMPRESS_JS_COMPRESSORS = getattr(settings, 'COMPRESS_JS_COMPRESSORS', [
-    'compress.compressors.yui.YUICompressor'
+    'compress.compressors.yui.JSYUICompressor'
 ])
 
 COMPRESS_COMPILERS = getattr(settings, 'COMPRESS_COMPILERS', [])
@@ -57,8 +58,3 @@ if COMPRESS_JS_COMPRESSORS is None:
 if COMPRESS_COMPILERS is None:
     COMPRESS_COMPILERS = []
 
-if COMPRESS_ROOT[-1] != '/':
-  COMPRESS_ROOT += '/'
-
-if COMPRESS_URL[-1] != '/':
-  COMPRESS_URL += '/'
