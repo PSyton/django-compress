@@ -11,6 +11,12 @@ Configuration and list of available settings for django-compress
   
   Don't forget to read :doc:`backwardsincompatiblechanges`
 
+Basic Settings
+================
+In ``settings.py`` you must add the following line to ``INSTALLED_APS`` ::
+
+  'compress',
+
 Specifying files
 ================
 
@@ -94,6 +100,23 @@ Other settings
 
   Defaults to ``not DEBUG`` (compressed files will only be used when ``DEBUG`` is ``False``)
 
+
+``COMPRESS_ROOT``
+.................
+
+  When static files are specified with relative paths this is used as the root directory.
+
+  Defaults to ``SATIC_ROOT`` and so should work ok with django.contrib.staticfiles
+
+
+``COMPRESS_URL``
+.................
+
+  The root url for compressed files.
+
+  Defaults to ``SATIC_URL`` and so should work ok with django.contrib.staticfiles
+
+
 ``COMPRESS_AUTO``
 .................
 
@@ -155,21 +178,39 @@ Other settings
 
   A tuple of compressors to be applied to CSS files.
   
-  Defaults to ``('compress.compressors.yui.YUICompressor',)``.
+  Defaults to ``('compress.compressors.yui.CSSYUICompressor',)``.
+
 
 ``COMPRESS_JS_COMPRESSORS``
 ...........................
 
   A tuple of compressors to be applied to JavaScript files.
   
-  Defaults to ``('compress.compressors.yui.YUICompressor',)``
+  Defaults to ``('compress.compressors.yui.JSYUICompressor',)``
 
-Also ``COMPRESS_*_COMPRESSORS`` can be set to an empty tuple or ``None`` to not use any compressor.
-The files will however still be concatenated to one file.
+  Also ``COMPRESS_*_COMPRESSORS`` can be set to an empty tuple or ``None`` to not use any compressor.
+  The files will however still be concatenated to one file.
 
 .. note::
 
   Please note that in order to use YUI Compressor, you need to install YUI Compressor (see :doc:`installation` for more details).
+
+
+``COMPRESS_YUI_BINARY``
+...........................
+
+The path the the yuicompress binary. This defaults to ``/usr/local/bin/yuicompressor`` which should work for most distros when installed via a package manager.
+
+If you install it from the yahoo site you will need to build it yourself (see :doc:`installation` for more details). You will then either write a wrapper script or else tweak the ``COMPRESS_YUI_CSS_ARGUMENTS`` and ``COMPRESS_YUI_JS_ARGUMENTS`` settings in order to add ``-jar``
+
+An example wrapper script is ::
+
+  #!/bin/sh
+  YUI_JAR=/home/webuser/bin/yuicompressor-2.4.6.jar
+  /usr/bin/java -jar $YUI_JAR "$@"
+
+
+If you install via your distros package manager you may already be provided with a wrapper script - this is case with recent Ubuntu installs.
 
 
 Rewriting CSS url()
