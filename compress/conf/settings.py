@@ -1,8 +1,8 @@
 from django.conf import settings
 
 
-COMPRESS_ROOT = getattr(settings, 'COMPRESS_ROOT', settings.MEDIA_ROOT)
-COMPRESS_URL = getattr(settings, 'COMPRESS_URL', settings.MEDIA_URL)
+#COMPRESS_ROOT = getattr(settings, 'COMPRESS_ROOT', settings.MEDIA_ROOT)
+#COMPRESS_URL = getattr(settings, 'COMPRESS_URL', settings.MEDIA_URL)
 
 COMPRESS = getattr(settings, 'COMPRESS', not settings.DEBUG)
 COMPRESS_SOURCE = getattr(settings, 'COMPRESS_SOURCE', settings.STATIC_ROOT)
@@ -19,10 +19,10 @@ COMPRESS_STORAGE = getattr(settings, 'COMPRESS_STORAGE',
     'compress.storage.CompressStorage')
 
 COMPRESS_CSS_COMPRESSORS = getattr(settings, 'COMPRESS_CSS_COMPRESSORS', [
-    'compress.compressors.yui.YUICompressor'
+    'compress.compressors.yui.CSSYUICompressor'
 ])
 COMPRESS_JS_COMPRESSORS = getattr(settings, 'COMPRESS_JS_COMPRESSORS', [
-    'compress.compressors.yui.YUICompressor'
+    'compress.compressors.yui.JSYUICompressor'
 ])
 
 COMPRESS_COMPILERS = getattr(settings, 'COMPRESS_COMPILERS', [])
