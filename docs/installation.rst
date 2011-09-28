@@ -26,6 +26,18 @@ Recommendations
 
 By default django-compress uses YUI Compressor to compress CSS and JS.
 YUI Compressor is an excellent stand-alone application for dealing with JS and CSS-files.
-YUI Compressor can be downloaded from: http://developer.yahoo.com/yui/compressor/.
 
 If you do not install YUI COMPRESSOR, make sure to disable the compressor in your settings.
+
+YUI Compressor can be downloaded from: http://developer.yahoo.com/yui/compressor/.
+Alternatively your distros package manager may be able to install it for you.
+
+If you download YUI Compressor from the yahoo site you will need to build it. You will need to install ``ant`` - an example install (using the ``yum`` package manager to install ``ant``) is shown ::
+
+    $ wget http://yui.zenfs.com/releases/yuicompressor/yuicompressor-2.4.6.zip
+    $ unzip yuicompressor-2.4.6.zip
+    $ cd yuicompressor-2.4.6/
+    $ yum install ant
+    $ ant build
+
+You will then need to point django-compress at the installed jar file - see the :doc:`installation` section for more details.
