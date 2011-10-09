@@ -1,5 +1,6 @@
 from django.test import TestCase
 from compress.conf import settings
+from compress.storage import DefaultStorage
 from compress.compressors import CSSCompressor, JSCompressor, SubProcessCompressor, BaseCompressor
 import os, glob
 
@@ -15,18 +16,20 @@ js_list = [ 'js/application1.js'
           , 'js/application2.js' ]
 
 class CompressorTest(TestCase):
+    root_path = os.path.join(os.path.dirname(__file__), "testdata/")
     def setUp(self):
         self.old_compress_url = settings.COMPRESS_URL
         self.old_root = settings.COMPRESS_ROOT
         self.old_css_compressors = settings.COMPRESS_CSS_COMPRESSORS
         self.old_js_compressors = settings.COMPRESS_JS_COMPRESSORS
-        settings.COMPRESS_URL = 'http://localhost/static/'
         settings.COMPRESS_ROOT = os.path.join(os.path.dirname(__file__), "testdata/")
+        settings.COMPRESS_URL = 'http://localhost/static/'
         settings.COMPRESS_CSS_COMPRESSORS = []
         settings.COMPRESS_JS_COMPRESSORS = []
 
     def test_css_concatenate(self):
         settings.COMPRESS_CSS_COMPRESSORS = []
+        settings.COMPRESS_ROOT = os.path.join(os.path.dirname(__file__), "testdata/")
         compressor = CSSCompressor()
         output = compressor.compress( css_list )
         f = open( os.path.join( settings.COMPRESS_ROOT, 'css/results1.css' ), 'rb' )

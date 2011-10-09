@@ -1,10 +1,7 @@
 import os
-
 from datetime import datetime
-
 from django.core.files.storage import FileSystemStorage, get_storage_class
 from django.utils.functional import LazyObject
-
 from compress.conf import settings
 
 
@@ -27,5 +24,3 @@ class DefaultStorage(LazyObject):
     def _setup(self):
         self._wrapped = get_storage_class(settings.COMPRESS_STORAGE)()
 
-
-storage = DefaultStorage()

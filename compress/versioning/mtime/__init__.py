@@ -1,6 +1,5 @@
 import time
-
-from compress.storage import storage
+from compress.storage import DefaultStorage
 from compress.versioning import VersioningBase
 
 
@@ -8,9 +7,9 @@ class MTimeVersioning(VersioningBase):
     def version(self, paths):
         # Return the modification time for the newest source file
         return str(max(
-            [int(time.mktime(storage.modified_time(path).timetuple())) for path in paths]
+            [int(time.mktime(DefaultStorage().modified_time(path).timetuple())) for path in paths]
         ))
 
     def need_update(self, output_file, paths, version):
         output_filename = self.output_filename(output_file, version)
-        return (int(time.mktime(storage.modified_time(output_filename).timetuple())) < int(version)), version
+        return (int(time.mktime(DefaultStorage().modified_time(output_filename).timetuple())) < int(version)), version

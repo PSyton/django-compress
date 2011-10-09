@@ -4,7 +4,7 @@ import subprocess
 import urlparse
 
 from compress.conf import settings
-from compress.storage import storage
+from compress.storage import DefaultStorage
 from compress.utils import to_class, make_relative_path
 
 URL_DETECTOR = r'url\([\'"]?([^\s)]+\.[a-z]+)[\'"]?\)'
@@ -34,7 +34,7 @@ class BatchCompressor(object):
 
     def read_file(self, path):
         """Read file content in binary mode"""
-        file = storage.open(path, mode='rb')
+        file = DefaultStorage().open(path, mode='rb')
         content = file.read().decode('utf8')
         file.close()
         return content

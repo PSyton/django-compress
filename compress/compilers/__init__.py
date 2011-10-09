@@ -2,7 +2,7 @@ import os
 import subprocess
 
 from compress.conf import settings
-from compress.storage import storage
+from compress.storage import DefaultStorage
 from compress.utils import to_class
 
 
@@ -25,7 +25,7 @@ class Compiler(object):
                         compiled_content = compiler.compile_file(content)
                         self.save_file(new_path, compiled_content)
                     except CompilerError:
-                        if not storage.exists(new_path):
+                        if not DefaultStorage().exists(new_path):
                             raise
                     paths[index] = new_path
         return paths
@@ -35,13 +35,13 @@ class Compiler(object):
         return '.'.join((path[0], extension))
 
     def read_file(self, path):
-        file = storage.open(path, 'rb')
+        file = DefaultStorage().open(path, 'rb')
         content = file.read()
         file.close()
         return content
 
     def save_file(self, path, content):
-        file = storage.open(path, 'wb')
+        file = DefaultStorage().open(path, 'wb')
         file.write(content)
         file.close()
 
@@ -57,7 +57,7 @@ class CompilerBase(object):
         raise NotImplementedError
 
     def save_file(self, path, content):
-        file = storage.open(path, 'wb')
+        file = DefaultStorage().open(path, 'wb')
         file.write(content)
         file.close()
         return path

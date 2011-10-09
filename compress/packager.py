@@ -6,7 +6,7 @@ from compress.conf import settings
 from compress.compilers import Compiler
 from compress.compressors import JSCompressor, CSSCompressor
 from compress.signals import css_compressed, js_compressed
-from compress.storage import storage
+from compress.storage import DefaultStorage
 from compress.versioning import Versioning
 from compress.utils import make_relative_path, makeDirs
 
@@ -70,7 +70,7 @@ class Packager(object):
 
     def save_file(self, filename, content):
         makeDirs(filename)
-        file = storage.open(filename, mode='wb+')
+        file = DefaultStorage().open(filename, mode='wb+')
         file.write( content.encode('utf8') )
         file.close()
 
