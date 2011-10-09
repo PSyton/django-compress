@@ -6,7 +6,7 @@ from compress.conf import settings
 from compress.compilers import Compiler
 from compress.compressors import JSCompressor, CSSCompressor
 from compress.signals import css_compressed, js_compressed
-from compress.storage import DefaultStorage
+from compress.storage import storage
 from compress.versioning import Versioning
 from compress.utils import make_relative_path, makeDirs
 
@@ -50,8 +50,7 @@ class Packager(object):
           signal = js_compressed
 
         if settings.COMPRESS_AUTO or self.force:
-            need_update, version = self.versioning.need_update(
-                package['output'], package['paths'])
+            need_update, version = self.versioning.need_update(package['output'], package['paths'])
             if need_update or self.force:
                 output_filename = self.versioning.output_filename(package['output'],
                     self.versioning.version(package['paths']))
@@ -61,7 +60,10 @@ class Packager(object):
                     print "Saving: %s" % make_relative_path(output_filename)
                 paths = self.compile(package['paths'])
                 content = compressor.compress( paths )
-                self.save_file( output_filename, content )
+                try:
+                    self.save_file( output_filename, content )
+                except:
+                    return ''
                 signal.send( sender=self, package=package, version=version )
         else:
             filename_base, filename = os.path.split(package['output'])
@@ -70,7 +72,7 @@ class Packager(object):
 
     def save_file(self, filename, content):
         makeDirs(filename)
-        file = DefaultStorage().open(filename, mode='wb+')
+        file = storage.open(filename, mode='wb+')
         file.write( content.encode('utf8') )
         file.close()
 

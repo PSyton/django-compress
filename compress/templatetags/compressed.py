@@ -42,10 +42,18 @@ class CompressedNode(template.Node):
     else:
       out = ''
 
+    individual = True
+
     if settings.COMPRESS:
       compressed_path = self.packager.pack( package )
-      out += self.create_tags(package, compressed_path)
-    else:
+
+      # If something wrong with compressing (can't create files) - fallback to individual
+
+      if compressed_path:
+        out += self.create_tags(package, compressed_path)
+        individual = False
+
+    if individual:
       package['paths'] = self.packager.compile(package['paths'])
       out += self.render_individual(package)
 

@@ -1,6 +1,5 @@
 from django.test import TestCase
 from compress.conf import settings
-from compress.storage import DefaultStorage
 from compress.compressors import CSSCompressor, JSCompressor, SubProcessCompressor, BaseCompressor
 import os, glob
 

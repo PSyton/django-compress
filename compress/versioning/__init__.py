@@ -2,7 +2,7 @@ import os
 import re
 
 from compress.conf import settings
-from compress.storage import DefaultStorage
+from compress.storage import storage
 from compress.utils import to_class, root_path
 
 
@@ -21,7 +21,7 @@ class Versioning(object):
         filename = settings.COMPRESS_VERSION_PLACEHOLDER.join([re.escape(part) for part in filename.split(settings.COMPRESS_VERSION_PLACEHOLDER)])
         regex = re.compile(r'^%s$' % self.output_filename(filename, r'([A-Za-z0-9]+)'))
         versions = []
-        for f in sorted(DefaultStorage().listdir(path), reverse=True):
+        for f in sorted(storage.listdir(path), reverse=True):
             version = regex.match(f)
             if version and version.groups():
                 versions.append(version.group(1))
@@ -41,7 +41,7 @@ class Versioning(object):
     def need_update(self, output_file, paths):
         version = self.version(paths)
         output_file = self.output_filename(output_file, version)
-        if not DefaultStorage().exists(root_path(output_file)):
+        if not storage.exists(root_path(output_file)):
             return True, version
         return getattr(self.versionner, 'need_update')(output_file, paths, version)
 
@@ -51,12 +51,12 @@ class Versioning(object):
         filename = settings.COMPRESS_VERSION_PLACEHOLDER.join([re.escape(part) for part in filename.split(settings.COMPRESS_VERSION_PLACEHOLDER)])
         path = os.path.dirname(filename)
         regex = re.compile(r'^%s$' % os.path.basename(self.output_filename(filename, r'([A-Za-z0-9]+)')))
-        if DefaultStorage().exists(path):
+        if storage.exists(path):
             for f in storage.listdir(path):
                 if regex.match(f):
                     if self.verbose:
                         print "Removing outdated file %s" % f
-                    DefaultStorage().delete(os.path.join(path, f))
+                    storage.delete(os.path.join(path, f))
 
 
 class VersioningBase(object):
