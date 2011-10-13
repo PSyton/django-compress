@@ -21,6 +21,9 @@ class Packager(object):
             'css': self.create_packages(settings.COMPRESS_CSS ),
             'js': self.create_packages(settings.COMPRESS_JS ),
         }
+        for kind in ['css', 'js']:
+            for p in self.packages[kind]:
+                self.packages[kind][p]['type'] = kind
 
     def package_for(self, kind, package_name):
       try:
@@ -34,13 +37,15 @@ class Packager(object):
 
     def individual_url(self, filename):
         return urlparse.urljoin(settings.COMPRESS_URL,
-            make_relative_path(filename)[1:])
+            make_relative_path(filename))
 
     def compile(self, paths):
         return self.compiler.compile(paths)
 
     def pack(self, package):
-        if not package['output'] or not package['type']:
+        if 'output' not in package \
+          or 'type' not in package \
+          or not package['output'] or not package['type']:
             return ''
         if package['type'] == 'css':
           compressor = CSSCompressor( self.verbose )
@@ -48,7 +53,6 @@ class Packager(object):
         else:
           compressor = JSCompressor( self.verbose )
           signal = js_compressed
-
         if settings.COMPRESS_AUTO or self.force:
             need_update, version = self.versioning.need_update(package['output'], package['paths'])
             if need_update or self.force:

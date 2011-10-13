@@ -73,7 +73,7 @@ class CSSCompressor(BatchCompressor):
                     return "url(%s)" % asset_path
                 asset_url = urlparse.urljoin(
                     settings.COMPRESS_URL,
-                    self.construct_asset_path(asset_path, path)[1:]
+                    self.construct_asset_path(asset_path, path)
                 )
                 return "url(%s)" % asset_url
             content = self.read_file(path)

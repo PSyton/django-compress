@@ -1,7 +1,5 @@
 import os
-
 from django.test import TestCase
-
 from compress.conf import settings
 from compress.packager import Packager, PackageNotFound
 
@@ -16,8 +14,7 @@ class PackagerTest(TestCase):
         packager = Packager()
         filename = os.path.join(settings.COMPRESS_ROOT, u'js/application.js')
         individual_url = packager.individual_url(filename)
-        self.assertEqual(individual_url,
-            "http://localhost/static/js/application.js")
+        self.assertEqual(individual_url, settings.COMPRESS_URL + "js/application.js" )
 
     def test_create_package(self):
         packager = Packager()
@@ -45,7 +42,9 @@ class PackagerTest(TestCase):
                                        , 'extra_context': { 'a': 'a', } }
                              }
                    , 'expected': { 'jquery': { 'context': {}
-                                             , 'externals': ('http://ajax.googleapis.com/ajax/libs/jquery/1.6.0/jquery.min.js',) }
+                                             , 'externals': ('http://ajax.googleapis.com/ajax/libs/jquery/1.6.0/jquery.min.js',)
+                                             , 'output': ''
+                                             , 'paths': [] }
                                  , 'main': { 'context': {}
                                            , 'output': 'application.r?.js'
                                            , 'paths': ['js/application1.js'] }
@@ -59,10 +58,10 @@ class PackagerTest(TestCase):
                                            , 'template': 'test/template.html' }
                                  }
                    }
-        self.assertEqual(packager.create_packages( packages['data'] ), packages['expected'] )
+        out = packager.create_packages( packages['data'] )
+        self.assertEqual(out, packages['expected'] )
         settings.COMPRESS_ROOT = old_root
 
     def tearDown(self):
         settings.COMPRESS_URL = self.old_compress_url
-
 

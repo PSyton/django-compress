@@ -9,8 +9,11 @@ def to_class(class_str):
     return getattr(module, class_name, None)
 
 def make_relative_path(absolute_path):
-    compress_root = os.path.normpath(settings.COMPRESS_ROOT)
-    return os.path.join('../', absolute_path.replace(compress_root, ''))
+    out = absolute_path
+    if absolute_path[0] == '/':
+      compress_root = os.path.normpath(settings.COMPRESS_ROOT) + "/"
+      out = os.path.normpath( absolute_path ).replace(compress_root, '')
+    return out
 
 def root_path(filename):
     return os.path.join(settings.COMPRESS_ROOT, filename)
