@@ -15,17 +15,19 @@ Use it for additional compresors, for example tidycss.
 
 """
 class BaseCompressor(object):
-    def __init__(self, verbose):
-        self.verbose = verbose
-    def compress(self, content):
-        """
-        In child class you mast implement this method.
+  def __init__(self, verbose):
+    self.verbose = verbose
+  def compress(self, content):
+    """
+    In child class you mast implement this method.
 
-        content - this is a content to be compressed
+    content - this is a content to be compressed
 
-        method returns compressed content
-        """
-        raise NotImplementedError
+    method returns compressed content
+    """
+    raise NotImplementedError
+  def available(self):
+    return False
 
 class BatchCompressor(object):
     def __init__(self, additional_compressors, verbose):
@@ -45,8 +47,13 @@ class BatchCompressor(object):
     def compress(self, paths):
         """Process set of files provided by paths."""
         content = self.concatenate( paths )
-        for compressor in self.extra_compressors:
-           content = getattr(compressor(verbose=self.verbose), 'compress')(content)
+        for compressor_class in self.extra_compressors:
+          compressor = compressor_class( verbose=self.verbose )
+          if compressor.available():
+            content = compressor.compress( content )
+          else:
+            if self.verbose:
+              print "Can't compress with %s, skiped..." % compressor_class.__name__
         return content
 
 class JSCompressor(BatchCompressor):
@@ -99,6 +106,10 @@ class CompressorError(Exception):
     pass
 
 class SubProcessCompressor(BaseCompressor):
+    def compress(self, content):
+        command = "%s %s" % ( self.executable(), self.options() )
+        return self.execute_command( command, content )
+
     def execute_command(self, command, content):
         pipe = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE,
             stdin=subprocess.PIPE, stderr=subprocess.PIPE)
@@ -122,3 +133,5 @@ class SubProcessCompressor(BaseCompressor):
 
         return compressed_content
 
+    def available(self):
+        return os.path.isfile( self.executable() )

@@ -1,10 +1,15 @@
 from compress.conf import settings
 from compress.compressors import SubProcessCompressor
-
+import os
 
 class UglifyJSCompressor(SubProcessCompressor):
-    def compress(self, js):
-        command = '%s -nc %s' % (settings.COMPRESS_UGLIFYJS_BINARY, settings.COMPRESS_UGLIFYJS_ARGUMENTS)
+
+    def executable(self):
+        return settings.COMPRESS_UGLIFYJS_BINARY
+
+    def options(self):
+        opts = '-nc %s' % settings.COMPRESS_UGLIFYJS_ARGUMENTS
         if self.verbose:
-            command += ' --verbose'
-        return self.execute_command(command, js)
+            opts += ' --verbose'
+        return opts
+

@@ -62,5 +62,4 @@ class TemplateTagsTest(TestCase):
   def test_tags_work(self):
     response = self.client.get(reverse('test-compress-templatetags'))
     self.assertEqual(response.status_code, 200)
-    print response.content
     self.assertTrue( response.content.count( '<link href="http://localhost/static/css/compressed/common.css" rel="stylesheet" type="text/css" media="screen,projection" />' ) == 1 )

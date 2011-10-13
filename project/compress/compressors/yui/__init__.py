@@ -7,11 +7,14 @@ class YUICompressor(SubProcessCompressor):
     self.arguments = arguments
     SubProcessCompressor.__init__(self, verbose)
 
-  def compress(self, content):
-    command = '%s --type=%s %s' % (settings.COMPRESS_YUI_BINARY, self.content_type, self.arguments)
+  def executable(self):
+    return settings.COMPRESS_YUI_BINARY
+
+  def options(self):
+    opts = '--type=%s %s' % (self.content_type, self.arguments)
     if self.verbose:
-      command += ' --verbose'
-    return self.execute_command(command, content)
+      opts += ' --verbose'
+    return opts
 
 class JSYUICompressor(YUICompressor):
   def __init__(self, verbose):
