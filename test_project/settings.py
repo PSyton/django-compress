@@ -1,6 +1,10 @@
 import os
+import sys
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
+
+PROJECT_ROOT = os.path.dirname(__file__)
+sys.path.insert(0, os.path.join(PROJECT_ROOT, ".."))
 
 ADMINS = (
 )
@@ -42,7 +46,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
 )
-    
+
 ROOT_URLCONF = 'test_project.urls'
 
 TEMPLATE_DIRS = ()
@@ -67,5 +71,5 @@ LOGGING = {
     }
 }
 
-COMPRESS_ROOT = os.path.join(os.path.dirname(__file__), "compress/tests/testdata/")
+COMPRESS_ROOT = os.path.join(os.path.dirname(__file__), "../compress/tests/testdata/")
 COMPRESS_URL = 'http://localhost/static/'

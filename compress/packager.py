@@ -90,9 +90,10 @@ class Packager(object):
             paths = []
             if 'source_filenames' in config[name]:
                 for path in config[name]['source_filenames']:
-                    full_path = os.path.join(settings.COMPRESS_ROOT, path)
+                    full_path = os.path.normpath(os.path.join(settings.COMPRESS_ROOT, path))
+                    notm_root = os.path.normpath(settings.COMPRESS_ROOT) + '/'
                     for path in glob.glob(full_path):
-                      path = os.path.normpath(path).replace(settings.COMPRESS_ROOT, '')
+                      path = os.path.normpath(path).replace(notm_root, '')
                       if not path in paths:
                         paths.append(path)
             packages[name]['paths'] = paths

@@ -7,7 +7,7 @@ setup(
     author='Andreas Pelme',
     author_email='Andreas Pelme <andreas@pelme.se>',
     url='http://code.google.com/p/django-compress/',
-    packages=find_packages(),
+    packages=find_packages(exclude=['test_project']),
     zip_safe=False,
     include_package_data=True,
     classifiers=[
