@@ -45,7 +45,9 @@ class Packager(object):
     def pack(self, package):
         if 'output' not in package \
           or 'type' not in package \
-          or not package['output'] or not package['type']:
+          or not package['output'] \
+          or not package['type'] \
+          or len( package['paths'] ) == 0:
             return ''
         if package['type'] == 'css':
           compressor = CSSCompressor( self.verbose )
