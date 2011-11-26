@@ -6,17 +6,24 @@ from compress.conf import settings
 
 
 class CompressStorage(FileSystemStorage):
-    def __init__(self, location=settings.COMPRESS_ROOT, base_url=settings.COMPRESS_URL,
- 				 *args, **kwargs):
-        super(CompressStorage, self).__init__(location, base_url, *args, **kwargs)
+    def __init__(self, location=settings.COMPRESS_ROOT,
+                 base_url=settings.COMPRESS_URL, *args, **kwargs):
+        super(CompressStorage, self).__init__(location, base_url,
+                                              *args, **kwargs)
 
     def accessed_time(self, name):
+        if (not self.exists(self.path(name))):
+            return datetime.now()
         return datetime.fromtimestamp(os.path.getatime(self.path(name)))
 
     def created_time(self, name):
+        if (not self.exists(self.path(name))):
+            return datetime.now()
         return datetime.fromtimestamp(os.path.getctime(self.path(name)))
 
     def modified_time(self, name):
+        if (not self.exists(self.path(name))):
+            return datetime.now()
         return datetime.fromtimestamp(os.path.getmtime(self.path(name)))
 
 

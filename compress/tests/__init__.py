@@ -4,6 +4,7 @@ from compress.tests.compressors import *
 from compress.tests.config import *
 from compress.tests.package import *
 from compress.tests.templatetags import *
+from compress.tests.version import *
 
 class CompressVersionInfoTests(TestCase):
     """
