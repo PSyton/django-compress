@@ -16,17 +16,19 @@ class VersioningTest(TestCase):
         self.assertTrue(v.version(js_list)>0)
 
     def test_cleanup(self):
-	# todo write for all versions...
+        # todo write for all versions...
         settings.COMPRESS_VERSIONING = "compress.versioning.mtime.MTimeVersioning"
 
-	# Create temporary file then try to call cleanup for it.
+        # Create temporary file then try to call cleanup for it.
         v = Versioning()
         filename = 'file.r?.xxx'
         fn = v.output_filename(filename, js_list)
-        
-        f = open(os.path.join(settings.COMPRESS_ROOT, fn), 'rw+')
+
+        filename = os.path.join(settings.COMPRESS_ROOT, fn)
+        f = open(filename, 'w+')
         f.close()
         v.cleanup(filename)
+        self.assertFalse(os.path.exists(filename))
 
-	# todo check that file doesn't exist...
+        # todo check that file doesn't exist...
 
