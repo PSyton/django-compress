@@ -51,7 +51,7 @@ ROOT_URLCONF = 'test_project.urls'
 
 TEMPLATE_DIRS = ()
 
-INSTALLED_APPS = ( 'compress', )
+INSTALLED_APPS = ( 'compress', 'app' )
 
 LOGGING = {
     'version': 1,
@@ -71,5 +71,5 @@ LOGGING = {
     }
 }
 
-COMPRESS_ROOT = os.path.join(os.path.dirname(__file__), "../compress/tests/testdata/")
+COMPRESS_ROOT = os.path.join(os.path.dirname(__file__), "app/tests/testdata/")
 COMPRESS_URL = 'http://localhost/static/'
