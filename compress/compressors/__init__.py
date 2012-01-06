@@ -9,25 +9,28 @@ from compress.utils import to_class, make_relative_path
 
 URL_DETECTOR = r'url\([\'"]?([^\s)]+\.[a-z]+)[\'"]?\)'
 
-"""
-Base compressor class for proccess some content.
-Use it for additional compresors, for example tidycss.
-
-"""
 class BaseCompressor(object):
-  def __init__(self, verbose):
-    self.verbose = verbose
-  def compress(self, content):
     """
-    In child class you mast implement this method.
+    Base compressor class for process some content.
+    Use it for additional compressors, for example tidycss.
 
-    content - this is a content to be compressed
-
-    method returns compressed content
     """
-    raise NotImplementedError
-  def available(self):
-    return False
+
+    def __init__(self, verbose):
+        self.verbose = verbose
+
+    def compress(self, content):
+        """
+        In child class you mast implement this method.
+
+        content - this is a content to be compressed
+
+        method returns compressed content
+        """
+        raise NotImplementedError
+
+    def available(self):
+        return False
 
 class BatchCompressor(object):
     def __init__(self, additional_compressors, verbose):
@@ -108,7 +111,7 @@ class CompressorError(Exception):
 class SubProcessCompressor(BaseCompressor):
     def compress(self, content):
         command = "%s %s" % ( self.executable(), self.options() )
-        return self.execute_command( command, content )
+        return self.execute_command(command, content)
 
     def execute_command(self, command, content):
         pipe = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE,
@@ -134,4 +137,4 @@ class SubProcessCompressor(BaseCompressor):
         return compressed_content
 
     def available(self):
-        return os.path.isfile( self.executable() )
+        return os.path.isfile(self.executable())

@@ -7,7 +7,9 @@ import glob
 
 
 class BadCompressor(BaseCompressor):
-    pass
+
+    def compress(self, content):
+        pass
 
 
 css_list = ['css/absolute.css', 'css/relative.css',
@@ -52,7 +54,8 @@ class CompressorTest(TestCase):
 
     def test_subprocess_compressor(self):
         compressor = SubProcessCompressor(False)
-        test_file = open(os.path.join(settings.COMPRESS_ROOT, 'js/results1.js'), 'rb')
+        test_file = open(os.path.join(settings.COMPRESS_ROOT,
+                                      'js/results1.js'), 'rb')
         data = test_file.read()
         test_file.close()
         out = compressor.execute_command("cat", data)

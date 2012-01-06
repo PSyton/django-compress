@@ -51,13 +51,15 @@ ROOT_URLCONF = 'test_project.urls'
 
 TEMPLATE_DIRS = ()
 
-INSTALLED_APPS = ( 'compress', 'app', 'django_jenkins', )
+INSTALLED_APPS = ('compress', 'app', 'django_jenkins', )
 
 JENKINS_TASKS = ('django_jenkins.tasks.run_pylint',
                  'django_jenkins.tasks.run_pep8',
                  'django_jenkins.tasks.run_pyflakes',
                  'django_jenkins.tasks.with_coverage',
                  'django_jenkins.tasks.django_tests',)
+
+PROJECT_APPS = ['compress',]
 
 LOGGING = {
     'version': 1,
