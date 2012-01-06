@@ -7,6 +7,7 @@ if COMPRESS_ROOT[-1] != '/':
 COMPRESS_URL = getattr(settings, 'COMPRESS_URL', settings.STATIC_URL)
 if COMPRESS_URL[-1] != '/':
     COMPRESS_URL += '/'
+
 COMPRESS_AUTO = getattr(settings, 'COMPRESS_AUTO', True)
 COMPRESS_VERSION = getattr(settings, 'COMPRESS_VERSION', False)
 COMPRESS_VERSION_PLACEHOLDER = getattr(settings,
@@ -15,6 +16,7 @@ COMPRESS_VERSION_DEFAULT = getattr(settings,
                                    'COMPRESS_VERSION_DEFAULT', '0')
 COMPRESS_VERSION_REMOVE_OLD = getattr(settings,
                                       'COMPRESS_VERSION_REMOVE_OLD', True)
+
 COMPRESS_VERSIONING = getattr(settings, 'COMPRESS_VERSIONING',
                               'compress.versioning.mtime.MTimeVersioning')
 

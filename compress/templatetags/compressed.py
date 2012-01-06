@@ -42,8 +42,9 @@ class CompressedNode(template.Node):
             out = ''
         individual = True
 
+        compressed_path = None
         if settings.COMPRESS:
-            compressed_path = self.packager.pack( package )
+            compressed_path = self.packager.pack(package)
 
         # If something wrong with compressing (can't create files) -
         # fallback to individual
@@ -74,7 +75,7 @@ def compressed_css(parser, token):
         '%r requires exactly one argument: the name of a group in the ' \
         'COMPRESS_CSS setting' % token.split_contents()[0]
 
-    return CompressedNode( name, 'css' )
+    return CompressedNode(name, 'css')
 compressed_css = register.tag(compressed_css)
 
 
@@ -85,5 +86,5 @@ def compressed_js(parser, token):
         raise template.TemplateSyntaxError,\
         '%r requires exactly one argument: the name of a group in the ' \
         'COMPRESS_JS setting' % token.split_contents()[0]
-    return CompressedNode( name, 'js' )
+    return CompressedNode(name, 'js')
 compressed_js = register.tag(compressed_js)

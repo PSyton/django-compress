@@ -68,9 +68,7 @@ class Packager(object):
                     print "Saving: %s" % make_relative_path(output_filename)
                 paths = self.compile(package['paths'])
                 content = compressor.compress(paths)
-                try:
-                    self.save_file(output_filename, content)
-                except:
+                if not self.save_file(output_filename, content):
                     return ''
                 signal.send(sender=self, package=package, version=version)
         else:
@@ -79,10 +77,14 @@ class Packager(object):
         return self.versioning.output_filename(package['output'], version)
 
     def save_file(self, filename, content):
-        makeDirs(filename)
-        file = storage.open(filename, mode='wb+')
-        file.write(content.encode('utf8'))
-        file.close()
+        try:
+            makeDirs(filename)
+            file = storage.open(filename, mode='wb+')
+            file.write(content.encode('utf8'))
+            file.close()
+        except Exception:
+            return False
+        return True
 
     def create_packages(self, config):
         packages = {}
@@ -96,9 +98,9 @@ class Packager(object):
                 for path in config[name]['source_filenames']:
                     full_path = os.path.normpath(
                         os.path.join(settings.COMPRESS_ROOT, path))
-                    notm_root = os.path.normpath(settings.COMPRESS_ROOT) + '/'
+                    norm_root = os.path.normpath(settings.COMPRESS_ROOT) + '/'
                     for path in glob.glob(full_path):
-                      path = os.path.normpath(path).replace(notm_root, '')
+                      path = os.path.normpath(path).replace(norm_root, '')
                       if not path in paths:
                         paths.append(path)
             packages[name]['paths'] = paths

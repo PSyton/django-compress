@@ -1,6 +1,5 @@
 import os
 import re
-
 from compress.conf import settings
 from compress.storage import storage
 from compress.utils import to_class, root_path
@@ -37,14 +36,14 @@ class Versioning(object):
         return versions[-1]
 
     def output_filename(self, filename, version):
-        if settings.COMPRESS_VERSION and version is not None:
-            output_filename = filename.replace(self.placeholder(),
-                version)
+        replacement = settings.COMPRESS_VERSION_DEFAULT
+        if settings.COMPRESS_VERSION:
+            replacement = version
+        if replacement:
+            output_filename = filename.replace(self.placeholder(), replacement)
         else:
-            output_filename = filename.replace(self.placeholder(),
-                settings.COMPRESS_VERSION_DEFAULT)
-        output_path = root_path(output_filename)
-        return os.path.normpath(output_path)
+            output_filename = filename
+        return os.path.normpath(root_path(output_filename))
 
     def need_update(self, output_file, paths):
         version = self.version(paths)
