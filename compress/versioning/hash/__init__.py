@@ -12,9 +12,8 @@ class HashVersioningBase(VersioningBase):
 
     def need_update(self, output_file, paths, version):
         output_file_name = self.output_filename(output_file, version)
-        placeholder = settings.COMPRESS_VERSION_PLACEHOLDER
         try:
-            placeholder_index = output_file.index(placeholder)
+            placeholder_index = output_file.index(self.placeholder())
             old_version = output_file_name[placeholder_index:placeholder_index + len(placeholder) - len(output_file)]
             return (version != old_version), version
         except ValueError:
