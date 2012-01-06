@@ -36,25 +36,25 @@ class CompressorTest(TestCase):
                                               "testdata/")
         compressor = CSSCompressor()
         output = compressor.compress(css_list)
-        f = open(os.path.join(settings.COMPRESS_ROOT,
+        test_file = open(os.path.join(settings.COMPRESS_ROOT,
                               'css/results1.css'), 'rb')
-        self.assertEqual(f.read().decode('utf8'), output)
-        f.close()
+        self.assertEqual(test_file.read().decode('utf8'), output)
+        test_file.close()
 
     def test_js_concatenate(self):
         settings.COMPRESS_JS_COMPRESSORS = []
         compressor = JSCompressor()
         output = compressor.compress(js_list)
-        f = open(os.path.join(settings.COMPRESS_ROOT,
+        test_file = open(os.path.join(settings.COMPRESS_ROOT,
                               'js/results1.js'), 'rb')
-        self.assertEqual(f.read().decode('utf8'), output)
-        f.close()
+        self.assertEqual(test_file.read().decode('utf8'), output)
+        test_file.close()
 
     def test_subprocess_compressor(self):
         compressor = SubProcessCompressor(False)
-        f = open(os.path.join(settings.COMPRESS_ROOT, 'js/results1.js'), 'rb')
-        data = f.read()
-        f.close()
+        test_file = open(os.path.join(settings.COMPRESS_ROOT, 'js/results1.js'), 'rb')
+        data = test_file.read()
+        test_file.close()
         out = compressor.execute_command("cat", data)
         self.assertEqual(out, data,
                 'Wrong command output expected "%s", got "%s"' % (data, out))
@@ -70,20 +70,20 @@ class CompressorTest(TestCase):
               'compress.compressors.csstidy.CSSTidyCompressor']
             compressor = CSSCompressor()
             output = compressor.compress(css_list)
-            f = open(os.path.join(settings.COMPRESS_ROOT,
+            test_file = open(os.path.join(settings.COMPRESS_ROOT,
                                    'css/results_tidy.css'), 'rb')
-            self.assertEqual(f.read().decode('utf8'), output)
-            f.close()
+            self.assertEqual(test_file.read().decode('utf8'), output)
+            test_file.close()
 
     def test_jsmin(self):
         settings.COMPRESS_JS_COMPRESSORS = [
           'compress.compressors.jsmin.JSMinCompressor']
         compressor = JSCompressor()
         output = compressor.compress(js_list)
-        f = open(os.path.join(settings.COMPRESS_ROOT,
+        test_file = open(os.path.join(settings.COMPRESS_ROOT,
                                'js/results_jsmin.js'), 'rb')
-        self.assertEqual(f.read().decode('utf8'), output)
-        f.close()
+        self.assertEqual(test_file.read().decode('utf8'), output)
+        test_file.close()
 
     def tearDown(self):
         settings.COMPRESS_URL = self.old_compress_url

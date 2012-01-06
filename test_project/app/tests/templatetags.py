@@ -34,10 +34,12 @@ COMPRESS_JS = {
 
 class TemplateTagsTest(TestCase):
     urls = 'app.tests.urls'
+    test_data_dir = os.path.join(os.path.dirname(__file__), "testdata/")
 
     def setUp(self):
         self.old_template_dirs = getattr(settings, 'TEMPLATE_DIRS')
-        settings.TEMPLATE_DIRS = (os.path.join(os.path.dirname(__file__), 'templates'),)
+        settings.TEMPLATE_DIRS = (os.path.join(os.path.dirname(__file__),
+                                               'templates'),)
         self.old_compress_url = compress_settings.COMPRESS_URL
         self.old_root = compress_settings.COMPRESS_ROOT
         self.old_css = compress_settings.COMPRESS_CSS
@@ -45,7 +47,7 @@ class TemplateTagsTest(TestCase):
         self.old_compress = compress_settings.COMPRESS
         compress_settings.COMPRESS = True
         compress_settings.COMPRESS_URL = 'http://localhost/static/'
-        compress_settings.COMPRESS_ROOT = os.path.join(os.path.dirname(__file__), "testdata/")
+        compress_settings.COMPRESS_ROOT = self.test_data_dir
         compress_settings.COMPRESS_CSS = COMPRESS_CSS
         compress_settings.COMPRESS_JS = COMPRESS_JS
 
@@ -60,4 +62,6 @@ class TemplateTagsTest(TestCase):
     def test_tags_work(self):
         response = self.client.get(reverse('test-compress-templatetags'))
         self.assertEqual(response.status_code, 200)
-        self.assertTrue(response.content.count('<link href="http://localhost/static/css/compressed/common.css" rel="stylesheet" type="text/css" media="screen,projection" />') == 1)
+        self.assertTrue(1 == response.content.count(
+            '<link href="http://localhost/static/css/compressed/common.css" '
+            'rel="stylesheet" type="text/css" media="screen,projection" />'))
