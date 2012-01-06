@@ -6,6 +6,7 @@ from package import *
 from templatetags import *
 from version import *
 
+
 class CompressVersionInfoTests(TestCase):
     """
     Test django-compress's internal version-reporting

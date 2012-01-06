@@ -2,12 +2,13 @@ import os
 import re
 import subprocess
 import urlparse
-
 from compress.conf import settings
 from compress.storage import storage
 from compress.utils import to_class, make_relative_path
 
+
 URL_DETECTOR = r'url\([\'"]?([^\s)]+\.[a-z]+)[\'"]?\)'
+
 
 class BaseCompressor(object):
     """
@@ -32,10 +33,12 @@ class BaseCompressor(object):
     def available(self):
         return False
 
+
 class BatchCompressor(object):
     def __init__(self, additional_compressors, verbose):
         self.verbose = verbose
-        self.extra_compressors = [to_class(compressor) for compressor in additional_compressors]
+        self.extra_compressors = [to_class(compressor) \
+                                  for compressor in additional_compressors]
 
     def read_file(self, path):
         """Read file content in binary mode"""
@@ -49,27 +52,30 @@ class BatchCompressor(object):
 
     def compress(self, paths):
         """Process set of files provided by paths."""
-        content = self.concatenate( paths )
+        content = self.concatenate(paths)
         for compressor_class in self.extra_compressors:
-          compressor = compressor_class( verbose=self.verbose )
+          compressor = compressor_class(verbose=self.verbose)
           if compressor.available():
-            content = compressor.compress( content )
+            content = compressor.compress(content)
           else:
             if self.verbose:
-              print "Can't compress with %s, skiped..." % compressor_class.__name__
+              print "Can't compress with %s, skiped..." % \
+                    compressor_class.__name__
         return content
 
+
 class JSCompressor(BatchCompressor):
-    def __init__(self, verbose = False):
-        BatchCompressor.__init__( self
-                                , additional_compressors = settings.COMPRESS_JS_COMPRESSORS
-                                , verbose = verbose )
+    def __init__(self, verbose=False):
+        BatchCompressor.__init__(self,
+            additional_compressors=settings.COMPRESS_JS_COMPRESSORS,
+            verbose=verbose)
+
 
 class CSSCompressor(BatchCompressor):
-    def __init__(self, verbose = False):
-        BatchCompressor.__init__( self
-                                , additional_compressors = settings.COMPRESS_CSS_COMPRESSORS
-                                , verbose = verbose )
+    def __init__(self, verbose=False):
+        BatchCompressor.__init__(self,
+            additional_compressors=settings.COMPRESS_CSS_COMPRESSORS,
+            verbose=verbose)
 
     def concatenate(self, paths):
         """Concatenate together files and rewrite urls"""
@@ -104,18 +110,23 @@ class CSSCompressor(BatchCompressor):
             path = os.path.join(os.path.dirname(css_path), asset_path)
         return os.path.normpath(path)
 
+
 class CompressorError(Exception):
     """This exception is raised when a filter fails"""
     pass
 
+
 class SubProcessCompressor(BaseCompressor):
+
     def compress(self, content):
-        command = "%s %s" % ( self.executable(), self.options() )
+        command = "%s %s" % (self.executable(), self.options())
         return self.execute_command(command, content)
 
     def execute_command(self, command, content):
-        pipe = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE,
-            stdin=subprocess.PIPE, stderr=subprocess.PIPE)
+        pipe = subprocess.Popen(command, shell=True,
+                                stdout=subprocess.PIPE,
+                                stdin=subprocess.PIPE,
+                                stderr=subprocess.PIPE)
         if content:
             pipe.stdin.write(content)
         pipe.stdin.close()
@@ -128,7 +139,8 @@ class SubProcessCompressor(BaseCompressor):
 
         if pipe.wait() != 0:
             if not error:
-                error = "Unable to apply %s compressor" % self.__class__.__name__
+                error = "Unable to apply %s compressor" % \
+                        self.__class__.__name__
             raise CompressorError(error)
 
         if self.verbose:

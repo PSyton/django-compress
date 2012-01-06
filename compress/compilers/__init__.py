@@ -11,7 +11,8 @@ class Compiler(object):
         self.verbose = verbose
 
     def compilers(self):
-        return [to_class(compiler) for compiler in settings.COMPRESS_COMPILERS]
+        return [to_class(compiler) for compiler in \
+                settings.COMPRESS_COMPILERS]
     compilers = property(compilers)
 
     def compile(self, paths):
@@ -19,7 +20,8 @@ class Compiler(object):
             for compiler in self.compilers:
                 compiler = compiler(self.verbose)
                 if compiler.match_file(path):
-                    new_path = self.output_path(path, compiler.output_extension)
+                    new_path = self.output_path(path,
+                                                compiler.output_extension)
                     content = self.read_file(path)
                     try:
                         compiled_content = compiler.compile_file(content)

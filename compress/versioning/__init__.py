@@ -17,9 +17,19 @@ class Versioning(object):
     def version(self, paths):
         return getattr(self.versionner, 'version')(paths)
 
+    def placeholder(self):
+        return settings.COMPRESS_VERSION_PLACEHOLDER
+
+    def file_regex(self, filename):
+        filename = self.placeholder().join(
+                            [re.escape(part) \
+                             for part in filename.split(self.placeholder())])
+        return re.compile(r'^%s$' % \
+                                   self.output_filename(filename,
+                                                        r'([A-Za-z0-9]+)'))
+
     def version_from_file(self, path, filename):
-        filename = settings.COMPRESS_VERSION_PLACEHOLDER.join([re.escape(part) for part in filename.split(settings.COMPRESS_VERSION_PLACEHOLDER)])
-        regex = re.compile(r'^%s$' % self.output_filename(filename, r'([A-Za-z0-9]+)'))
+        regex = self.file_regex(filename)
         versions = []
         for f in sorted(storage.listdir(path), reverse=True):
             version = regex.match(f)
@@ -30,10 +40,10 @@ class Versioning(object):
 
     def output_filename(self, filename, version):
         if settings.COMPRESS_VERSION and version is not None:
-            output_filename = filename.replace(settings.COMPRESS_VERSION_PLACEHOLDER,
+            output_filename = filename.replace(self.placeholder(),
                 version)
         else:
-            output_filename = filename.replace(settings.COMPRESS_VERSION_PLACEHOLDER,
+            output_filename = filename.replace(self.placeholder(),
                 settings.COMPRESS_VERSION_DEFAULT)
         output_path = root_path(output_filename)
         return os.path.normpath(output_path)
@@ -46,11 +56,13 @@ class Versioning(object):
         return getattr(self.versionner, 'need_update')(output_file, paths, version)
 
     def cleanup(self, filename):
-        if not settings.COMPRESS_VERSION and not settings.COMPRESS_VERSION_REMOVE_OLD:
+        if not settings.COMPRESS_VERSION \
+            and not settings.COMPRESS_VERSION_REMOVE_OLD:
             return  # Nothing to delete here
-        filename = settings.COMPRESS_VERSION_PLACEHOLDER.join([re.escape(part) for part in filename.split(settings.COMPRESS_VERSION_PLACEHOLDER)])
-        path = os.path.dirname(filename).replace("\\", '')
-        regex = re.compile(r'^%s$' % os.path.basename(self.output_filename(filename, r'([A-Za-z0-9]+)')))
+
+        path = os.path.dirname(filename)
+        filename = os.path.basename(filename)
+        regex = self.file_regex(filename)
         if storage.exists(path):
             for f in storage.listdir(path)[1]:
                 if regex.match(f):

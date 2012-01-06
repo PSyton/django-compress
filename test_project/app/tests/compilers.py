@@ -1,5 +1,6 @@
 from django.test import TestCase
-from compress.conf import settings
+#from compress.conf import settings
+
 
 class CompilerTest(TestCase):
     pass

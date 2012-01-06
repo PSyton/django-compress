@@ -3,7 +3,9 @@ from django.test import TestCase
 from compress.conf import settings
 from compress.packager import Packager, PackageNotFound
 
+
 class PackagerTest(TestCase):
+
     def setUp(self):
         self.old_compress_url = settings.COMPRESS_URL
         settings.COMPRESS_URL = 'http://localhost/static/'
@@ -14,7 +16,8 @@ class PackagerTest(TestCase):
         packager = Packager()
         filename = os.path.join(settings.COMPRESS_ROOT, u'js/application.js')
         individual_url = packager.individual_url(filename)
-        self.assertEqual(individual_url, settings.COMPRESS_URL + "js/application.js" )
+        self.assertEqual(individual_url,
+                         settings.COMPRESS_URL + "js/application.js")
 
     def test_create_package(self):
         packager = Packager()

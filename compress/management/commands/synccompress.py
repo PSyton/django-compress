@@ -8,10 +8,12 @@ class Command(NoArgsCommand):
         make_option('--force',
             action='store_true',
             default=False,
-            help='Force update of all files, even if the source files are older than the current compressed file.'
+            help='Force update of all files, even if the source files are'
+            ' older than the current compressed file.'
         ),
     )
-    help = 'Updates and compresses CSS and JS on-demand, without restarting Django'
+    help = 'Updates and compresses CSS and JS on-demand,' \
+           'without restarting Django'
     args = ''
 
     def handle_noargs(self, **options):

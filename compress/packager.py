@@ -15,24 +15,24 @@ class Packager(object):
     def __init__(self, force=False, verbose=False):
         self.force = force
         self.verbose = verbose
-        self.versioning = Versioning( verbose )
-        self.compiler = Compiler( verbose )
+        self.versioning = Versioning(verbose)
+        self.compiler = Compiler(verbose)
         self.packages = {
-            'css': self.create_packages(settings.COMPRESS_CSS ),
-            'js': self.create_packages(settings.COMPRESS_JS ),
+            'css': self.create_packages(settings.COMPRESS_CSS),
+            'js': self.create_packages(settings.COMPRESS_JS),
         }
         for kind in ['css', 'js']:
             for p in self.packages[kind]:
                 self.packages[kind][p]['type'] = kind
 
     def package_for(self, kind, package_name):
-      try:
-        return self.packages[kind][package_name].copy()
-      except KeyError:
-        raise PackageNotFound(
-          "No corresponding package for %s package name : %s" % (
-             kind, package_name
-           )
+        try:
+            return self.packages[kind][package_name].copy()
+        except KeyError:
+            raise PackageNotFound(
+                "No corresponding package for %s package name : %s" % (
+                    kind, package_name
+            )
         )
 
     def individual_url(self, filename):
@@ -44,33 +44,35 @@ class Packager(object):
 
     def pack(self, package):
         if 'output' not in package \
-          or 'type' not in package \
-          or not package['output'] \
-          or not package['type'] \
-          or len( package['paths'] ) == 0:
+            or 'type' not in package \
+            or not package['output'] \
+            or not package['type'] \
+            or len(package['paths']) == 0:
             return ''
         if package['type'] == 'css':
-          compressor = CSSCompressor( self.verbose )
+          compressor = CSSCompressor(self.verbose)
           signal = css_compressed
         else:
-          compressor = JSCompressor( self.verbose )
+          compressor = JSCompressor(self.verbose)
           signal = js_compressed
         if settings.COMPRESS_AUTO or self.force:
-            need_update, version = self.versioning.need_update(package['output'], package['paths'])
+            need_update, version = self.versioning.need_update(
+                package['output'], package['paths'])
             if need_update or self.force:
-                output_filename = self.versioning.output_filename(package['output'],
+                output_filename = self.versioning.output_filename(
+                    package['output'],
                     self.versioning.version(package['paths']))
                 self.versioning.cleanup(package['output'])
                 if self.verbose or self.force:
                     print "Version: %s" % version
                     print "Saving: %s" % make_relative_path(output_filename)
                 paths = self.compile(package['paths'])
-                content = compressor.compress( paths )
+                content = compressor.compress(paths)
                 try:
-                    self.save_file( output_filename, content )
+                    self.save_file(output_filename, content)
                 except:
                     return ''
-                signal.send( sender=self, package=package, version=version )
+                signal.send(sender=self, package=package, version=version)
         else:
             filename_base, filename = os.path.split(package['output'])
             version = self.versioning.version_from_file(filename_base, filename)
@@ -79,7 +81,7 @@ class Packager(object):
     def save_file(self, filename, content):
         makeDirs(filename)
         file = storage.open(filename, mode='wb+')
-        file.write( content.encode('utf8') )
+        file.write(content.encode('utf8'))
         file.close()
 
     def create_packages(self, config):
@@ -92,7 +94,8 @@ class Packager(object):
             paths = []
             if 'source_filenames' in config[name]:
                 for path in config[name]['source_filenames']:
-                    full_path = os.path.normpath(os.path.join(settings.COMPRESS_ROOT, path))
+                    full_path = os.path.normpath(
+                        os.path.join(settings.COMPRESS_ROOT, path))
                     notm_root = os.path.normpath(settings.COMPRESS_ROOT) + '/'
                     for path in glob.glob(full_path):
                       path = os.path.normpath(path).replace(notm_root, '')

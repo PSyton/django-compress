@@ -1,6 +1,6 @@
 from compress.conf import settings
 from compress.compressors import SubProcessCompressor
-import os
+
 
 class UglifyJSCompressor(SubProcessCompressor):
 
@@ -12,4 +12,3 @@ class UglifyJSCompressor(SubProcessCompressor):
         if self.verbose:
             opts += ' --verbose'
         return opts
-
