@@ -41,5 +41,6 @@ class CompressVersionInfoTests(TestCase):
 
         for version_dict in versions:
             compress.VERSION = version_dict['version']
-            self.assertEqual(compress.get_version(), version_dict['expected'])
+            self.assertEqual(compress.get_version(),
+                             version_dict['expected'])
 

@@ -50,11 +50,11 @@ class Packager(object):
             or len(package['paths']) == 0:
             return ''
         if package['type'] == 'css':
-          compressor = CSSCompressor(self.verbose)
-          signal = css_compressed
+              compressor = CSSCompressor(self.verbose)
+              signal = css_compressed
         else:
-          compressor = JSCompressor(self.verbose)
-          signal = js_compressed
+              compressor = JSCompressor(self.verbose)
+              signal = js_compressed
         if settings.COMPRESS_AUTO or self.force:
             need_update, version = self.versioning.need_update(
                 package['output'], package['paths'])
@@ -73,7 +73,8 @@ class Packager(object):
                 signal.send(sender=self, package=package, version=version)
         else:
             filename_base, filename = os.path.split(package['output'])
-            version = self.versioning.version_from_file(filename_base, filename)
+            version = self.versioning.version_from_file(filename_base,
+                                                        filename)
         return self.versioning.output_filename(package['output'], version)
 
     def save_file(self, filename, content):
@@ -100,9 +101,9 @@ class Packager(object):
                         os.path.join(settings.COMPRESS_ROOT, path))
                     norm_root = os.path.normpath(settings.COMPRESS_ROOT) + '/'
                     for path in glob.glob(full_path):
-                      path = os.path.normpath(path).replace(norm_root, '')
-                      if not path in paths:
-                        paths.append(path)
+                        path = os.path.normpath(path).replace(norm_root, '')
+                        if not path in paths:
+                            paths.append(path)
             packages[name]['paths'] = paths
             if 'output_filename' in config[name]:
                 packages[name]['output'] = config[name]['output_filename']

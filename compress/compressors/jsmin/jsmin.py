@@ -48,7 +48,8 @@ def isAlphanum(c):
            dollar sign, or non-ASCII character.
     """
     return ((c >= 'a' and c <= 'z') or (c >= '0' and c <= '9') or
-            (c >= 'A' and c <= 'Z') or c == '_' or c == '$' or c == '\\' or (c is not None and ord(c) > 126))
+            (c >= 'A' and c <= 'Z') or c == '_' or c == '$'
+            or c == '\\' or (c is not None and ord(c) > 126))
 
 
 class UnterminatedComment(Exception):
@@ -122,7 +123,8 @@ class JavascriptMinify(object):
            2   Copy B to A. Get the next B. (Delete A).
            3   Get the next B. (Delete B).
            action treats a string as a single character. Wow!
-           action recognizes a regular expression if it is preceded by ( or , or =.
+           action recognizes a regular expression if it is preceded by
+            ( or , or =.
         """
         if action <= 1:
             self._outA()

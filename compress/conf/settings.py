@@ -54,8 +54,12 @@ COMPRESS_UGLIFYJS_BINARY = getattr(settings, 'COMPRESS_UGLIFYJS_BINARY',
 COMPRESS_UGLIFYJS_ARGUMENTS = getattr(settings,
                                       'COMPRESS_UGLIFYJS_ARGUMENTS', '')
 
-COMPRESS_COFFEE_SCRIPT_BINARY = getattr(settings, 'COMPRESS_COFFEE_SCRIPT_BINARY', '/usr/local/bin/coffee')
-COMPRESS_COFFEE_SCRIPT_ARGUMENTS = getattr(settings, 'COFFEE_SCRIPT_ARGUMENTS', '')
+COMPRESS_COFFEE_SCRIPT_BINARY = getattr(settings,
+                                        'COMPRESS_COFFEE_SCRIPT_BINARY',
+                                        '/usr/local/bin/coffee')
+
+COMPRESS_COFFEE_SCRIPT_ARGUMENTS = getattr(settings,
+                                           'COFFEE_SCRIPT_ARGUMENTS', '')
 
 COMPRESS_SASS_BINARY = getattr(settings, 'COMPRESS_SASS_BINARY',
                                '/usr/local/bin/sass')

@@ -1,20 +1,20 @@
-from compress.conf import settings
 from compress.versioning import VersioningBase, VersioningError
-
 from django.utils.hashcompat import sha_constructor
 
 try:
     import git
 except ImportError:
-    raise VersioningError("Must have GitPython package installed to use git versioning")
+    raise VersioningError("Must have GitPython package installed to use "
+                          "git versioning")
 
 
 class GitVersioningBase(VersioningBase):
     def need_update(self, output_file, paths, version):
         output_file_name = self.output_filename(output_file, version)
         try:
-            placeholder_index = output_file.index(self.placeholder())
-            old_version = output_file_name[placeholder_index:placeholder_index + len(placeholder) - len(output_file)]
+            start = output_file.index(self.placeholder())
+            stop = start + len(self.placeholder()) - len(output_file)
+            old_version = output_file_name[start:stop]
             return (version != old_version), version
         except ValueError:
             # No placeholder found, do not update, manual update if needed
@@ -40,7 +40,8 @@ class GitRevVersioning(GitVersioningBase):
 
 class GitHeadRevVersioning(GitVersioningBase):
     """
-    Version as hash of latest revision in HEAD. Assumes all sources_files in same git repo.
+    Version as hash of latest revision in HEAD. Assumes all sources_files
+    in same git repo.
     """
     def version(self, paths):
         f = paths[0]

@@ -1,20 +1,20 @@
 import cStringIO
 from hashlib import md5, sha1
-
-from compress.conf import settings
 from compress.storage import storage
 from compress.versioning import VersioningBase
 
 
 class HashVersioningBase(VersioningBase):
-    def __init__(self, hash_method):
+    def __init__(self, versioning, hash_method):
+        super(HashVersioningBase, self).__init__(versioning)
         self.hash_method = hash_method
 
     def need_update(self, output_file, paths, version):
         output_file_name = self.output_filename(output_file, version)
         try:
-            placeholder_index = output_file.index(self.placeholder())
-            old_version = output_file_name[placeholder_index:placeholder_index + len(placeholder) - len(output_file)]
+            start = output_file.index(self.placeholder())
+            stop = start + len(self.placeholder()) - len(output_file)
+            old_version = output_file_name[start:stop]
             return (version != old_version), version
         except ValueError:
             # no placeholder found, do not update, manual update if needed
@@ -49,10 +49,10 @@ class HashVersioningBase(VersioningBase):
 
 
 class MD5Versioning(HashVersioningBase):
-    def __init__(self):
-        super(MD5Versioning, self).__init__(md5)
+    def __init__(self, versioning):
+        super(MD5Versioning, self).__init__(versioning, md5)
 
 
 class SHA1Versioning(HashVersioningBase):
-    def __init__(self):
-        super(SHA1Versioning, self).__init__(sha1)
+    def __init__(self, versioning):
+        super(SHA1Versioning, self).__init__(versioning, sha1)

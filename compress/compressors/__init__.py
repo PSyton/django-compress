@@ -54,13 +54,13 @@ class BatchCompressor(object):
         """Process set of files provided by paths."""
         content = self.concatenate(paths)
         for compressor_class in self.extra_compressors:
-          compressor = compressor_class(verbose=self.verbose)
-          if compressor.available():
-            content = compressor.compress(content)
-          else:
-            if self.verbose:
-              print "Can't compress with %s, skiped..." % \
-                    compressor_class.__name__
+            compressor = compressor_class(verbose=self.verbose)
+            if compressor.available():
+                content = compressor.compress(content)
+            else:
+                if self.verbose:
+                    print "Can't compress with %s, skiped..." % \
+                        compressor_class.__name__
         return content
 
 

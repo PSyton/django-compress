@@ -21,14 +21,14 @@ class PackagerTest(TestCase):
 
     def test_create_package(self):
         packager = Packager()
-        self.assertEqual(packager.create_packages( {} ), {})
+        self.assertEqual(packager.create_packages({}), {})
 
-        with self.assertRaises( PackageNotFound ):
+        with self.assertRaises(PackageNotFound):
           packager.package_for('css', 'test_package')
 
         old_root = settings.COMPRESS_ROOT
         settings.COMPRESS_ROOT = os.path.join(os.path.dirname(__file__), "testdata/")
-        packages = { 'data': { 'jquery': { 'external_urls': ('http://ajax.googleapis.com/ajax/libs/jquery/1.6.0/jquery.min.js',) }
+        packages = {'data': {'jquery': {'external_urls': ('http://ajax.googleapis.com/ajax/libs/jquery/1.6.0/jquery.min.js',) }
                              , 'main': { 'source_filenames': ( 'js/application.js'
                                                              , 'js/application1.js'
                                                              , )

@@ -10,7 +10,7 @@ class CSSTidyCompressor(SubProcessCompressor):
 
     def compress(self, css):
         tmp_file = tempfile.NamedTemporaryFile()
-        tmp_file.write( css.encode( 'utf8' ) )
+        tmp_file.write(css.encode('utf8'))
         tmp_file.flush()
 
         output_file = tempfile.NamedTemporaryFile()

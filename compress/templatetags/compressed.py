@@ -28,16 +28,18 @@ class CompressedNode(template.Node):
     def render(self, context):
         package_name = template.Variable(self.name).resolve(context)
         try:
-            package = self.packager.package_for(self.type ,package_name)
+            package = self.packager.package_for(self.type, package_name)
             package['type'] = self.type
         except PackageNotFound:
-            return ''  # fail silently, do not return anything if an invalid group is specified
+            # fail silently, do not return anything if an invalid group
+            return ''
 
         if not 'template' in package:
             package['template'] = self.template
 
         if 'externals' in package:
-            out = '\n'.join([self.render_external(package, url) for url in package['externals']])
+            out = '\n'.join([self.render_external(package, url) \
+                             for url in package['externals']])
         else:
             out = ''
         individual = True
