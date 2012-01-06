@@ -46,7 +46,7 @@ class CompressorTest(TestCase):
         compressor = JSCompressor()
         output = compressor.compress(js_list)
         f = open(os.path.join(settings.COMPRESS_ROOT,
-                                'js/results1.js'), 'rb')
+                              'js/results1.js'), 'rb')
         self.assertEqual(f.read().decode('utf8'), output)
         f.close()
 
@@ -81,7 +81,7 @@ class CompressorTest(TestCase):
         compressor = JSCompressor()
         output = compressor.compress(js_list)
         f = open(os.path.join(settings.COMPRESS_ROOT,
-                               'js/results_jsmin.js' ), 'rb')
+                               'js/results_jsmin.js'), 'rb')
         self.assertEqual(f.read().decode('utf8'), output)
         f.close()
 
