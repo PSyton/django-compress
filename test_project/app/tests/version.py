@@ -22,13 +22,16 @@ class VersioningTest(TestCase):
         # Create temporary file then try to call cleanup for it.
         v = Versioning()
         filename = 'file.r?.xxx'
-        fn = v.output_filename(filename, js_list)
+        fn = v.output_filename(filename, None)
 
-        filename = os.path.join(settings.COMPRESS_ROOT, fn)
-        f = open(filename, 'w+')
+        f = open(fn, 'w+')
         f.close()
+
+        version = v.version_from_file(os.path.dirname(fn), filename)
+        self.assertTrue(version == '0')
+
         v.cleanup(filename)
-        self.assertFalse(os.path.exists(filename))
+        self.assertFalse(os.path.exists(fn))
 
         # todo check that file doesn't exist...
 

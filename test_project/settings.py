@@ -81,3 +81,4 @@ LOGGING = {
 
 COMPRESS_ROOT = os.path.join(os.path.dirname(__file__), "app/tests/testdata/")
 COMPRESS_URL = 'http://localhost/static/'
+COMPRESS_VERSION = True

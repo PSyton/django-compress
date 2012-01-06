@@ -21,17 +21,15 @@ class Versioning(object):
         return settings.COMPRESS_VERSION_PLACEHOLDER
 
     def file_regex(self, filename):
-        filename = self.placeholder().join(
+        filename = r'([A-Za-z0-9]+)'.join(
                             [re.escape(part) \
                              for part in filename.split(self.placeholder())])
-        return re.compile(r'^%s$' % \
-                                   self.output_filename(filename,
-                                                        r'([A-Za-z0-9]+)'))
+        return re.compile(r'^%s$' % filename)
 
     def version_from_file(self, path, filename):
         regex = self.file_regex(filename)
         versions = []
-        for f in sorted(storage.listdir(path), reverse=True):
+        for f in sorted(storage.listdir(path)[1], reverse=True):
             version = regex.match(f)
             if version and version.groups():
                 versions.append(version.group(1))
@@ -59,10 +57,8 @@ class Versioning(object):
         if not settings.COMPRESS_VERSION \
             and not settings.COMPRESS_VERSION_REMOVE_OLD:
             return  # Nothing to delete here
-
         path = os.path.dirname(filename)
-        filename = os.path.basename(filename)
-        regex = self.file_regex(filename)
+        regex = self.file_regex(os.path.basename(filename))
         if storage.exists(path):
             for f in storage.listdir(path)[1]:
                 if regex.match(f):
