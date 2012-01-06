@@ -59,7 +59,7 @@ JENKINS_TASKS = ('django_jenkins.tasks.run_pylint',
                  'django_jenkins.tasks.with_coverage',
                  'django_jenkins.tasks.django_tests',)
 
-PROJECT_APPS = ['compress',]
+PROJECT_APPS = ['compress','app',]
 
 LOGGING = {
     'version': 1,
