@@ -9,7 +9,6 @@ if COMPRESS_URL[-1] != '/':
     COMPRESS_URL += '/'
 
 COMPRESS_AUTO = getattr(settings, 'COMPRESS_AUTO', True)
-COMPRESS_VERSION = getattr(settings, 'COMPRESS_VERSION', False)
 COMPRESS_VERSION_PLACEHOLDER = getattr(settings,
                                        'COMPRESS_VERSION_PLACEHOLDER', '?')
 COMPRESS_VERSION_DEFAULT = getattr(settings,

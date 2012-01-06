@@ -7,17 +7,14 @@ from compress.utils import to_class, root_path
 
 class Versioning(object):
     def __init__(self, verbose=False):
+        self.version_impl = to_class(settings.COMPRESS_VERSIONING)(self)
         self.verbose = verbose
 
-    def versionner(self):
-        return to_class(settings.COMPRESS_VERSIONING)(self)
-    versionner = property(versionner)
-
     def version(self, paths):
-        return getattr(self.versionner, 'version')(paths)
+        return self.version_impl.version(paths)
 
     def placeholder(self):
-        return settings.COMPRESS_VERSION_PLACEHOLDER
+        return self.version_impl.placeholder()
 
     def file_regex(self, filename):
         filename = r'([A-Za-z0-9]+)'.join(
@@ -36,25 +33,17 @@ class Versioning(object):
         return versions[-1]
 
     def output_filename(self, filename, version):
-        replacement = settings.COMPRESS_VERSION_DEFAULT
-        if settings.COMPRESS_VERSION:
-            replacement = version
-        if replacement:
-            output_filename = filename.replace(self.placeholder(), replacement)
-        else:
-            output_filename = filename
-        return os.path.normpath(root_path(output_filename))
+        return self.version_impl.output_filename(filename, version)
 
     def need_update(self, output_file, paths):
         version = self.version(paths)
         output_file = self.output_filename(output_file, version)
         if not storage.exists(root_path(output_file)):
             return True, version
-        return getattr(self.versionner, 'need_update')(output_file, paths, version)
+        return self.version_impl.need_update(output_file, paths, version)
 
     def cleanup(self, filename):
-        if not settings.COMPRESS_VERSION \
-            and not settings.COMPRESS_VERSION_REMOVE_OLD:
+        if not settings.COMPRESS_VERSION_REMOVE_OLD:
             return  # Nothing to delete here
         path = os.path.dirname(filename)
         regex = self.file_regex(os.path.basename(filename))
@@ -71,7 +60,15 @@ class VersioningBase(object):
         self.versioning = versioning
 
     def output_filename(self, filename, version):
-        return self.versioning.output_filename(filename, version)
+        replacement = version
+        if not replacement:
+            replacement = settings.COMPRESS_VERSION_DEFAULT
+
+        output_filename = filename.replace(self.placeholder(), replacement)
+        return os.path.normpath(root_path(output_filename))
+
+    def placeholder(self):
+        return settings.COMPRESS_VERSION_PLACEHOLDER
 
     def version(self, source_files):
         raise NotImplementedError
