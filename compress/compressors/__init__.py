@@ -42,10 +42,12 @@ class BatchCompressor(object):
 
     def read_file(self, path):
         """Read file content in binary mode"""
-        file = storage.open(path, mode='rb')
-        content = file.read().decode('utf8')
-        file.close()
-        return content
+        if storage.exists(path):
+            file = storage.open(path, mode='rb')
+            content = file.read().decode('utf8')
+            file.close()
+            return content
+        return ''
 
     def concatenate(self, paths):
         return '\n'.join([self.read_file(path) for path in paths])
